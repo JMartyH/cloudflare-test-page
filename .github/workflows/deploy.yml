@@ -1,0 +1,37 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Minify CSS
+        run: npx clean-css-cli@5 assets/css/main.css -o assets/css/main.min.css
+
+      - name: Minify JS
+        run: npx terser assets/js/util.js assets/js/main.js -o assets/js/main.min.js
+
+      - name: Purge unused FontAwesome CSS
+        run: |
+          npx purgecss@5 \
+            --css assets/css/fontawesome-all.min.css \
+            --content index.html \
+            --output assets/css/
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: your-project-name
+          directory: .

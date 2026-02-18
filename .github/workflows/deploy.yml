@@ -15,15 +15,18 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Install build tools
+        run: npm install --save-dev clean-css-cli terser purgecss
+
       - name: Minify CSS
-        run: npx clean-css-cli@5 assets/css/main.css -o assets/css/main.min.css
+        run: ./node_modules/.bin/cleancss assets/css/main.css -o assets/css/main.min.css
 
       - name: Minify JS
-        run: npx terser assets/js/util.js assets/js/main.js -o assets/js/main.min.js
+        run: ./node_modules/.bin/terser assets/js/util.js assets/js/main.js -o assets/js/main.min.js
 
       - name: Purge unused FontAwesome CSS
         run: |
-          npx purgecss@5 \
+          ./node_modules/.bin/purgecss \
             --css assets/css/fontawesome-all.min.css \
             --content index.html \
             --output assets/css/

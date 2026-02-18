@@ -1,0 +1,10 @@
+{
+    "name": "html5up-hyperspace",
+    "version": "1.0.0",
+    "private": true,
+    "devDependencies": {
+        "clean-css-cli": "^5.6.3",
+        "purgecss": "^5.0.0",
+        "terser": "^5.0.0"
+    }
+}

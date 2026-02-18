@@ -18,18 +18,24 @@ jobs:
       - name: Install build tools
         run: npm install --save-dev clean-css-cli terser purgecss
 
+      - name: Create dist directory and copy static assets
+        run: |
+          mkdir dist
+          cp index.html robots.txt _headers dist/
+          cp -r assets images dist/
+
       - name: Minify CSS
-        run: ./node_modules/.bin/cleancss assets/css/main.css -o assets/css/main.min.css
+        run: ./node_modules/.bin/cleancss dist/assets/css/main.css -o dist/assets/css/main.min.css
 
       - name: Minify JS
-        run: ./node_modules/.bin/terser assets/js/util.js assets/js/main.js -o assets/js/main.min.js
+        run: ./node_modules/.bin/terser dist/assets/js/util.js dist/assets/js/main.js -o dist/assets/js/main.min.js
 
       - name: Purge unused FontAwesome CSS
         run: |
           ./node_modules/.bin/purgecss \
-            --css assets/css/fontawesome-all.min.css \
-            --content index.html \
-            --output assets/css/
+            --css dist/assets/css/fontawesome-all.min.css \
+            --content dist/index.html \
+            --output dist/assets/css/
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/pages-action@v1
@@ -37,4 +43,4 @@ jobs:
           apiToken: ${{ secrets.APITOKEN }}
           accountId: ${{ secrets.ACCOUNTID }}
           projectName: cloudflare-test-page
-          directory: .
+          directory: dist

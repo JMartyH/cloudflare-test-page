@@ -15,9 +15,15 @@ jobs:
         with:
           node-version: '20'
 
+<<<<<<< HEAD
       - name: Install build tools
         run: npm install --save-dev clean-css-cli terser purgecss
 
+=======
+      - name: Minify CSS 
+        run: clean-css-cli assets/css/main.css -o assets/css/main.min.css
+        
+>>>>>>> 3c130b448b8d2d9cb8cfa5adbc8dc16c71a0d6e0
       - name: Minify CSS
         run: ./node_modules/.bin/cleancss assets/css/main.css -o assets/css/main.min.css
 

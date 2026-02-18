@@ -1,0 +1,31 @@
+name: Build & Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install tools
+        run: |
+          npm install -g clean-css-cli terser
+
+      - name: Minify CSS
+        run: |
+          clean-css-cli assets/css/main.css -o assets/css/main.min.css
+
+      - name: Minify JS
+        run: |
+          cat assets/js/util.js assets/js/main.js | terser -o assets/js/main.min.js
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: cloudflare-test-page
+          directory: .

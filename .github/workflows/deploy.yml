@@ -14,7 +14,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Install clean-css-cli 
+        run: npm install -g clean-css-cli
 
+      - name: Minify CSS 
+        run: clean-css-cli assets/css/main.css -o assets/css/main.min.css
+        
       - name: Minify CSS
         run: npx clean-css-cli@5 assets/css/main.css -o assets/css/main.min.css
 
